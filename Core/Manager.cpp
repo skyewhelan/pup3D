@@ -5,6 +5,9 @@
 
 #include <iostream>
 #include "Manager.h"
+
+#include <stb_image.h>
+
 #include "../Assets/Shader.h"
 #include "../Input/Input.h"
 #include "../Scene/TestScene.h"
@@ -62,9 +65,18 @@ int Manager::Initialise()
     
     glViewport(0, 0, m_ActualWidth, m_ActualHeight);
     
+    // Flip textures to correct orientation
+    stbi_set_flip_vertically_on_load(true);
+    
     // Backface culling
-    //glCullFace(GL_BACK);
-    //glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    
+    // Depth testing
+    glEnable(GL_DEPTH_TEST);
+    
+    // VSync
+    glfwSwapInterval(1);
     
     Input::Initialize(m_Window);
     
@@ -109,7 +121,7 @@ void Manager::Update()
 void Manager::Render()
 {
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     m_ActiveScene->Render(m_Window);
     

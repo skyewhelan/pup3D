@@ -5,17 +5,20 @@
 
 #pragma once
 #include <map>
-
 #include "Actors/Actor.h"
+#include "Misc/Camera.h"
 
 class Scene
 {
-private:
+protected:
+    // Camera through which the scene is rendered
+    Camera* m_MainCamera = nullptr;
     // Actors in the scene, mapped to names
     std::map<std::string, Actor*> m_Actors;
-    
     // Meshes used by the scene, mapped to names
     std::map<std::string, Mesh*> m_Meshes;
+    // Textures used by the scene, mapped to names
+    std::map<std::string, Texture*> m_Textures;
     // Shader Programs used in the scene, mapped to names
     std::map<std::string, GLuint> m_ShaderPrograms;
 public:
@@ -33,9 +36,11 @@ public:
     
     Actor* GetActor(std::string _name);
     Mesh* GetMesh(std::string _name);
+    Texture* GetTexture(std::string _name);
     GLuint GetShaderProgram(std::string _name);
     
     Actor* AddActor(std::string _name, Actor* _actor);
     Mesh* AddMesh(std::string _name, Mesh* _mesh);
+    Texture* AddTexture(std::string _name, Texture* _texture);
     GLuint AddShaderProgram(std::string _name, GLuint _shaderProgram);
 };

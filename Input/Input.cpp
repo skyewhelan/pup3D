@@ -31,13 +31,24 @@ void Input::RemoveReceiver(InputReceiver* _receiver)
 
 bool Input::IsKeyPressed(int _key)
 {
-    
-    return (glfwGetKey(GetInstance().m_Window, _key) == GLFW_PRESS);
+    return GetInstance().m_KeyStates[_key];
+    //return (glfwGetKey(GetInstance().m_Window, _key) == GLFW_PRESS);
 }
 
 void Input::KeyCallback(GLFWwindow* _window, int _key, int _scancode, int _action, int _mods)
 {
-    for (InputReceiver* Receiver : GetInstance().m_Receivers)
+    Input& Instance = GetInstance();
+    
+    if (_action == GLFW_PRESS)
+    {
+        Instance.m_KeyStates[_key] = true;
+    }
+    else if (_action == GLFW_RELEASE)
+    {
+        Instance.m_KeyStates[_key] = false;
+    }
+    
+    for (InputReceiver* Receiver : Instance.m_Receivers)
     {
         Receiver->KeyCallback(_window, _key, _scancode, _action, _mods);
     }

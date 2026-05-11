@@ -17,6 +17,7 @@ private:
     bool m_IsInputFrozen = false; // Is input currently frozen
     std::vector<InputReceiver*> m_Receivers; // List of active input receivers
     GLFWwindow* m_Window = nullptr; // Window pointer
+    bool m_KeyStates[350];
     
     Input();
     static Input& GetInstance(); // Get the singleton instance
