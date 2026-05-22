@@ -20,6 +20,7 @@ public:
     virtual void Update(float _deltaTime);
     
     void SetPosition(glm::vec3 _position);
+    void SetForward(glm::vec3 _forward);
     
     glm::vec3 GetPosition();
     glm::vec3 GetForward();

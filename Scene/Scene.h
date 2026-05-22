@@ -5,22 +5,32 @@
 
 #pragma once
 #include <map>
+#include <string>
+
+#include "Skybox.h"
+#include "../Assets/MeshAsset.h"
+#include "../Assets/TextureAsset.h"
 #include "Actors/Actor.h"
-#include "Misc/Camera.h"
+#include "Components/Cameras/Camera.h"
+
+class Material;
 
 class Scene
 {
 protected:
     // Camera through which the scene is rendered
     Camera* m_MainCamera = nullptr;
+    Skybox* m_Skybox = nullptr;
     // Actors in the scene, mapped to names
     std::map<std::string, Actor*> m_Actors;
     // Meshes used by the scene, mapped to names
-    std::map<std::string, Mesh*> m_Meshes;
+    std::map<std::string, MeshAsset*> m_Meshes;
     // Textures used by the scene, mapped to names
-    std::map<std::string, Texture*> m_Textures;
+    std::map<std::string, TextureAsset*> m_Textures;
     // Shader Programs used in the scene, mapped to names
     std::map<std::string, GLuint> m_ShaderPrograms;
+    // Materials used in the scene, mapped to names
+    std::map<std::string, Material*> m_Materials;
 public:
     Scene();
     ~Scene();
@@ -35,12 +45,14 @@ public:
     virtual void Render(GLFWwindow* _window);
     
     Actor* GetActor(std::string _name);
-    Mesh* GetMesh(std::string _name);
-    Texture* GetTexture(std::string _name);
+    MeshAsset* GetMesh(std::string _name);
+    TextureAsset* GetTexture(std::string _name);
     GLuint GetShaderProgram(std::string _name);
+    Material* GetMaterial(std::string _name);
     
     Actor* AddActor(std::string _name, Actor* _actor);
-    Mesh* AddMesh(std::string _name, Mesh* _mesh);
-    Texture* AddTexture(std::string _name, Texture* _texture);
+    MeshAsset* AddMesh(std::string _name, MeshAsset* _mesh);
+    TextureAsset* AddTexture(std::string _name, TextureAsset* _texture);
     GLuint AddShaderProgram(std::string _name, GLuint _shaderProgram);
+    Material* AddMaterial(std::string _name, Material* _material);
 };

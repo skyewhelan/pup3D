@@ -12,7 +12,6 @@ Camera::~Camera()
 
 void Camera::Update(float _deltaTime)
 {
-    //m_Forward = glm::normalize(m_Position - m_Forward);
     m_Right = glm::normalize(glm::cross(m_Forward, {0.0f, 1.0f, 0.0f}));
     m_Up = glm::cross(m_Right, m_Forward);
     
@@ -22,6 +21,11 @@ void Camera::Update(float _deltaTime)
 void Camera::SetPosition(glm::vec3 _position)
 {
     m_Position = _position;
+}
+
+void Camera::SetForward(glm::vec3 _forward)
+{
+    m_Forward = _forward;
 }
 
 glm::vec3 Camera::GetPosition()

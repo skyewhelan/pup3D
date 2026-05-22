@@ -8,80 +8,30 @@
 
 #include <stb_image.h>
 
+#include "Framebuffer.h"
+#include "RenderSettings.h"
 #include "../Assets/Shader.h"
 #include "../Input/Input.h"
 #include "../Scene/TestScene.h"
+#include "../Scene/Actors/Terrain.h"
 
 Manager::Manager()
 {
     
 }
 
-int Manager::Initialise()
+int Manager::Initialize()
 {
     glfwInit();
-    
-    m_Monitor = glfwGetPrimaryMonitor();
-    
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-  
-    
-    if (m_IsBorderless)
-    {
-        const GLFWvidmode* Mode = glfwGetVideoMode(m_Monitor);
-        glfwWindowHint(GLFW_RED_BITS, Mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, Mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, Mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate);
-        
-        m_ActualHeight = Mode->height;
-        m_ActualWidth = Mode->width;
-        
-        m_Window = glfwCreateWindow(m_ActualWidth, m_ActualHeight, "OpenGL Playground", m_Monitor, NULL);
-    }
-    else
-    {
-        m_Window = glfwCreateWindow(m_WindowedWidth, m_WindowedHeight, "OpenGL Playground", NULL, NULL);
-    }
-    
-    if (!m_Window)
-    {
-        std::cout << "Failed to create GLFW window\n";
-        glfwTerminate();
-        return -1;
-    }
-    
-    glfwMakeContextCurrent(m_Window);
-    
-    if (glewInit() != GLEW_OK)
-    {
-        std::cout << "Failed to initialize GLEW\n";
-        system("pause");
-        glfwTerminate();
-        return -1;
-    }
-    
-    glViewport(0, 0, m_ActualWidth, m_ActualHeight);
-    
-    // Flip textures to correct orientation
-    stbi_set_flip_vertically_on_load(true);
-    
-    // Backface culling
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-    
-    // Depth testing
-    glEnable(GL_DEPTH_TEST);
-    
-    // VSync
-    glfwSwapInterval(1);
+    RenderSettings::Initialize();
+    m_Window = RenderSettings::GetWindow();
     
     Input::Initialize(m_Window);
     
-    m_ActiveScene = new TestScene();
+    m_Terrain = new Terrain();
+    m_Terrain->LoadHeightmap("heightmap.save");
     
+    m_ActiveScene = new TestScene();
     
     while (!glfwWindowShouldClose(m_Window))
     {
@@ -100,12 +50,10 @@ void Manager::KeyCallback(GLFWwindow* _window, int _key, int _scancode, int _act
     {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
-}
-
-void Manager::ToggleWireframe()
-{
-    m_IsWireframe = !m_IsWireframe;
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (_key == GLFW_KEY_F && _action == GLFW_PRESS)
+    {
+        RenderSettings::SetWireframe(!RenderSettings::IsWireframe());
+    }
 }
 
 void Manager::Update()
@@ -120,10 +68,28 @@ void Manager::Update()
 
 void Manager::Render()
 {
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glm::ivec2 RenderRes = RS::GetRenderResolution();
+    glm::ivec2 OutputRes = RS::GetOutputResolution();
+    
+    Framebuffer* FB = RS::GetFramebuffer();
+    glBindFramebuffer(GL_FRAMEBUFFER, FB->GetMultisampleFBO());
+    
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    glViewport(0, 0, RenderRes.x, RenderRes.y);
+    m_Terrain->Render();
     m_ActiveScene->Render(m_Window);
+    
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, FB->GetMultisampleFBO());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FB->GetIntermediateFBO());
+    //glEnable(GL_FRAMEBUFFER_SRGB); 
+    glBlitFramebuffer(0, 0, RenderRes.x, RenderRes.y, 0, 0, RenderRes.x, RenderRes.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    //glDisable(GL_FRAMEBUFFER_SRGB);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    
+    glViewport(0, 0, OutputRes.x, OutputRes.y);
+    FB->Render();
     
     glfwSwapBuffers(m_Window);
 }

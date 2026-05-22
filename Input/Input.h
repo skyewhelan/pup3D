@@ -31,6 +31,12 @@ public:
     
     // Send key events to input receivers
     static void KeyCallback(GLFWwindow* _window, int _key, int _scancode, int _action, int _mods);
+    // Send mouse movement events to input receivers
+    static void MouseMoveCallback(GLFWwindow* _window, double _x, double _y);
+    // Send mouse button events to input receivers
+    static void MouseButtonCallback(GLFWwindow* _window, int _button, int _action, int _mods);
+    // Send scroll wheel events to input receivers
+    static void ScrollCallback(GLFWwindow* _window, double _deltaX, double _deltaY);
     
     static bool IsInputFrozen(); // Check if input is frozen
     static void ToggleInput(); // Toggle whether or not input is frozen

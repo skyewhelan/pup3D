@@ -111,6 +111,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,8 +158,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Assets\Mesh.cpp" />
-    <ClCompile Include="Assets\Texture.cpp" />
+    <ClCompile Include="Assets\Material.cpp" />
+    <ClCompile Include="Assets\MeshAsset.cpp" />
+    <ClCompile Include="Assets\TextureAsset.cpp" />
+    <ClCompile Include="Core\Framebuffer.cpp" />
     <ClCompile Include="Core\main.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -311,6 +314,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Core\RenderSettings.cpp" />
     <ClCompile Include="Input\Input.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -539,83 +543,15 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="Scene\Misc\Camera.cpp">
-      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <Optimization>Disabled</Optimization>
-      <SupportJustMyCode>true</SupportJustMyCode>
-      <AssemblerOutput>NoListing</AssemblerOutput>
-      <AssemblerListingLocation>gl_playground\x64\Debug\</AssemblerListingLocation>
-      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <BrowseInformation>false</BrowseInformation>
-      <BrowseInformationFile>gl_playground\x64\Debug\</BrowseInformationFile>
-      <CompileAs>Default</CompileAs>
-      <UseDynamicDebugging>false</UseDynamicDebugging>
-      <ConformanceMode>true</ConformanceMode>
-      <DiagnosticsFormat>Column</DiagnosticsFormat>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <ErrorReporting>Prompt</ErrorReporting>
-      <ExpandAttributedSource>false</ExpandAttributedSource>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <EnableASAN>false</EnableASAN>
-      <EnableFuzzer>false</EnableFuzzer>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <EnableVectorLength>NotSet</EnableVectorLength>
-      <FloatingPointModel>Precise</FloatingPointModel>
-      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-      <GenerateModuleDependencies>false</GenerateModuleDependencies>
-      <GenerateSourceDependencies>false</GenerateSourceDependencies>
-      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
-      <MinimalRebuild>false</MinimalRebuild>
-      <ModuleDependenciesFile>gl_playground\x64\Debug\</ModuleDependenciesFile>
-      <ModuleOutputFile>gl_playground\x64\Debug\</ModuleOutputFile>
-      <OmitDefaultLibName>false</OmitDefaultLibName>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <ObjectFileName>gl_playground\x64\Debug\</ObjectFileName>
-      <CallingConvention>Cdecl</CallingConvention>
-      <ProgramDataBaseFileName>gl_playground\x64\Debug\vc145.pdb</ProgramDataBaseFileName>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>gl_playground\x64\Debug\gl_playground.pch</PrecompiledHeaderOutputFile>
-      <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>false</PreprocessKeepComments>
-      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-      <ShowIncludes>false</ShowIncludes>
-      <SourceDependenciesFile>gl_playground\x64\Debug\</SourceDependenciesFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <SmallerTypeCheck>false</SmallerTypeCheck>
-      <SpectreMitigation>false</SpectreMitigation>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <TrackerLogDirectory>gl_playground\x64\Debug\gl_playground.tlog\</TrackerLogDirectory>
-      <TranslateIncludes>false</TranslateIncludes>
-      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <UseFullPaths>true</UseFullPaths>
-      <WarningLevel>Level3</WarningLevel>
-      <XMLDocumentationFileName>gl_playground\x64\Debug\</XMLDocumentationFileName>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <IntelJCCErratum>false</IntelJCCErratum>
-      <BuildStlModules>false</BuildStlModules>
-      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <LinkCompiled>true</LinkCompiled>
-    </ClCompile>
-    <ClCompile Include="Scene\Misc\FreeCam.cpp" />
+    <ClCompile Include="Scene\Actors\Terrain.cpp" />
+    <ClCompile Include="Scene\Components\Cameras\Camera.cpp" />
+    <ClCompile Include="Scene\Components\Cameras\EyeCam.cpp" />
+    <ClCompile Include="Scene\Components\Cameras\FreeCam.cpp" />
+    <ClCompile Include="Scene\Components\Cameras\OrbitCam.cpp" />
+    <ClCompile Include="Scene\Components\Component.cpp" />
+    <ClCompile Include="Scene\Components\MeshComponent.cpp" />
+    <ClCompile Include="Scene\Components\PointLight.cpp" />
+    <ClCompile Include="Scene\Components\TransformComponent.cpp" />
     <ClCompile Include="Scene\Scene.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -692,31 +628,64 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Scene\Skybox.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Assets\Mesh.h" />
+    <ClInclude Include="Assets\Material.h" />
+    <ClInclude Include="Assets\MeshAsset.h" />
     <ClInclude Include="Assets\Shader.h" />
-    <ClInclude Include="Assets\Texture.h" />
+    <ClInclude Include="Assets\TextureAsset.h" />
+    <ClInclude Include="Core\Framebuffer.h" />
+    <ClInclude Include="Core\RenderSettings.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputReceiver.h" />
     <ClInclude Include="Resources\Shape.h" />
     <ClInclude Include="Core\Manager.h" />
     <ClInclude Include="Scene\Actors\Actor.h" />
-    <ClInclude Include="Scene\Misc\Camera.h" />
-    <ClInclude Include="Scene\Misc\FreeCam.h" />
+    <ClInclude Include="Scene\Actors\Terrain.h" />
+    <ClInclude Include="Scene\Components\Cameras\Camera.h" />
+    <ClInclude Include="Scene\Components\Cameras\EyeCam.h" />
+    <ClInclude Include="Scene\Components\Cameras\FreeCam.h" />
+    <ClInclude Include="Scene\Components\Cameras\OrbitCam.h" />
+    <ClInclude Include="Scene\Components\Component.h" />
+    <ClInclude Include="Scene\Components\MeshComponent.h" />
+    <ClInclude Include="Scene\Components\PointLight.h" />
+    <ClInclude Include="Scene\Components\TransformComponent.h" />
     <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\Skybox.h" />
     <ClInclude Include="Scene\TestScene.h" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Shaders\2Dbasic.frag" />
-    <Content Include="Resources\Shaders\2Dbasic.vert" />
-    <Content Include="Resources\Shaders\3DBasic.vert" />
-    <Content Include="Resources\Shaders\BasicTexture.frag" />
-    <Content Include="Resources\Shaders\BasicTexture.vert" />
+    <Content Include="Resources\Shaders\3DNormals.vert" />
+    <Content Include="Resources\Shaders\BlinnPhong.frag" />
+    <Content Include="Resources\Shaders\CheckNormals.frag" />
     <Content Include="Resources\Shaders\CheckTexCoords.frag" />
-    <Content Include="Resources\Shaders\VertexColor.frag" />
-    <Content Include="Resources\Shaders\VertexColor.vert" />
+    <Content Include="Resources\Shaders\Old\2Dbasic.frag" />
+    <Content Include="Resources\Shaders\Old\2Dbasic.vert" />
+    <Content Include="Resources\Shaders\Old\3DBasic.vert" />
+    <Content Include="Resources\Shaders\Old\3DBasicAffine.vert" />
+    <Content Include="Resources\Shaders\Old\BasicTexture.frag" />
+    <Content Include="Resources\Shaders\Old\BasicTexture.vert" />
+    <Content Include="Resources\Shaders\Old\BasicTextureAffine.frag" />
+    <Content Include="Resources\Shaders\Old\VertexColor.frag" />
+    <Content Include="Resources\Shaders\Old\VertexColor.vert" />
+    <Content Include="Resources\Shaders\RenderTexture.frag" />
+    <Content Include="Resources\Shaders\RenderTexture.vert" />
+    <Content Include="Resources\Shaders\Skybox.frag" />
+    <Content Include="Resources\Shaders\Skybox.vert" />
+    <Content Include="Resources\Shaders\Terrain.vert" />
+    <Content Include="Resources\Shaders\TerrainColor.frag" />
+    <Content Include="Resources\Shaders\UnlitColor.frag" />
+    <Content Include="Resources\Shaders\UnlitTexture.frag" />
+    <Content Include="Resources\Textures\Skybox\back.jpg" />
+    <Content Include="Resources\Textures\Skybox\bottom.jpg" />
+    <Content Include="Resources\Textures\Skybox\front.jpg" />
+    <Content Include="Resources\Textures\Skybox\left.jpg" />
+    <Content Include="Resources\Textures\Skybox\right.jpg" />
+    <Content Include="Resources\Textures\Skybox\top.jpg" />
+    <Content Include="Resources\Textures\test.jpg" />
+    <Content Include="Resources\Textures\test.png" />
     <Content Include="Resources\Textures\wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

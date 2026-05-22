@@ -1,10 +1,9 @@
 #pragma once
-#include "Camera.h"
+#include "EyeCam.h"
 
-class FreeCam : public Camera
+class FreeCam : public EyeCam
 {
-    
-    float m_Speed;
+    float m_Speed = 10;
 public:
     FreeCam();
     

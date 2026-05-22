@@ -1,11 +1,11 @@
 // pup3D - puppy powered engine
-// Mesh.cpp
+// MeshAsset.cpp
 // 
 // Skye Whelan
 
-#include "Mesh.h"
+#include "MeshAsset.h"
 
-Mesh::Mesh(MeshData _shape)
+MeshAsset::MeshAsset(MeshData _shape)
 {
     m_IndexCount = _shape.Indices.size();
     
@@ -25,21 +25,24 @@ Mesh::Mesh(MeshData _shape)
     
     // Set vertex attribute pointers
     // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)0);
     glEnableVertexAttribArray(0); 
     // TexCoords
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
+    // Normals
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
     
     //
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-Mesh::~Mesh()
+MeshAsset::~MeshAsset()
 {
 }
 
-void Mesh::Render()
+void MeshAsset::Render()
 {
     // Bind VAO
     glBindVertexArray(m_VAO);

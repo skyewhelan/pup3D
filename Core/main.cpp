@@ -12,7 +12,7 @@
 int main()
 {
     Manager* AppManager = new Manager();
-    AppManager->Initialise();
+    AppManager->Initialize();
     
     glfwTerminate();
     return 0;

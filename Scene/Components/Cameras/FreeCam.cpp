@@ -7,31 +7,30 @@ FreeCam::FreeCam()
 
 void FreeCam::Update(float _deltaTime)
 {
-    float Speed = 10 * _deltaTime;
     if (Input::IsKeyPressed(GLFW_KEY_W))
     {
-        m_Position += m_Forward * Speed;
+        m_Position += m_Forward * m_Speed * _deltaTime;
     }
     if (Input::IsKeyPressed(GLFW_KEY_S))
     {
-        m_Position -= m_Forward * Speed;
+        m_Position -= m_Forward * m_Speed * _deltaTime;
     }
     if (Input::IsKeyPressed(GLFW_KEY_A))
     {
-        m_Position -= m_Right * Speed;
+        m_Position -= m_Right * m_Speed * _deltaTime;
     }
     if (Input::IsKeyPressed(GLFW_KEY_D))
     {
-        m_Position += m_Right * Speed;
+        m_Position += m_Right * m_Speed * _deltaTime;
     }
     if (Input::IsKeyPressed(GLFW_KEY_Q))
     {
-        m_Position += m_Up * Speed;
+        m_Position += glm::vec3(0.0f, 1.0f, 0.0f) * m_Speed * _deltaTime;
     }
     if (Input::IsKeyPressed(GLFW_KEY_E))
     {
-        m_Position -= m_Up * Speed;
+        m_Position -= glm::vec3(0.0f, 1.0f, 0.0f) * m_Speed * _deltaTime;
     }
     
-    Camera::Update(_deltaTime);
+    EyeCam::Update(_deltaTime);
 }

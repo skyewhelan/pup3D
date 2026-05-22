@@ -1,12 +1,12 @@
 // pup3D - puppy powered engine
-// Mesh.h
+// MeshAsset.h
 // Defines a mesh to be used for rending actors in a scene
 // Skye Whelan
 
 #pragma once
 #include "../Resources/Shape.h"
 
-class Mesh
+class MeshAsset
 {
 private:
     GLuint m_VBO; // Vertex Buffer Object; Stores vertices
@@ -15,8 +15,8 @@ private:
     
     int m_IndexCount;
 public:
-    Mesh(MeshData _shape);
-    ~Mesh();
+    MeshAsset(MeshData _shape);
+    ~MeshAsset();
     
     void Render();
 };

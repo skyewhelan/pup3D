@@ -7,82 +7,62 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-Actor::Actor(Mesh* _mesh, Texture* _texture, GLuint _shaderProgram)
+Actor::Actor()
 {
-    m_Mesh = _mesh;
-    m_Texture = _texture;
-    m_ShaderProgram = _shaderProgram;
+    m_Root = new TransformComponent();
 }
 
 Actor::~Actor()
 {
 }
 
-void Actor::SetMesh(Mesh* _mesh)
+TransformComponent* Actor::GetRoot()
 {
-    m_Mesh = _mesh;
+    return m_Root;
 }
 
-void Actor::SetTexture(Texture* _texture)
+Component* Actor::AttachComponent(Component* _component, Component* _attachPoint)
 {
-    m_Texture = _texture;
-}
-
-void Actor::SetShaderProgram(GLuint _shaderProgram)
-{
-    m_ShaderProgram = _shaderProgram;
-}
-
-Mesh* Actor::GetMesh()
-{
-    return m_Mesh;
-}
-
-Texture* Actor::GetTexture()
-{
-    return m_Texture;
-}
-
-GLuint Actor::GetShaderProgram()
-{
-    return m_ShaderProgram;
-}
-
-void Actor::SetPosition(glm::vec3 _position)
-{
-    m_Position = _position;
-}
-
-void Actor::Rotate(glm::vec3 _rotation)
-{
-    m_Rotation += _rotation;
+    _component->AttachTo(this, _attachPoint);
+    return _component;
 }
 
 void Actor::Update(float _deltaTime)
 {
-    m_Model = glm::mat4(1.0f);
-    
-    // Scale
-    m_Model = glm::scale(m_Model, m_Scale);
-    // Rotate
-    m_Model = glm::rotate(m_Model, glm::radians(m_Rotation.x), { 1.0f, 0.0f, 0.0f });
-    m_Model = glm::rotate(m_Model, glm::radians(m_Rotation.y), { 0.0f, 1.0f, 0.0f });
-    m_Model = glm::rotate(m_Model, glm::radians(m_Rotation.z), { 0.0f, 0.0f, 1.0f });
-    // Translate
-    m_Model = glm::translate(m_Model, m_Position);
+    m_Root->Update(_deltaTime);
 }
 
-void Actor::Render(GLFWwindow* _window, Camera* _camera)
+void Actor::Render()
 {
-    // Texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Texture->GetID());
-    // Shaders
-    glUseProgram(m_ShaderProgram);
-    // Uniforms
-    glUniform1i(glGetUniformLocation(m_ShaderProgram, "Texture"), 0);
-    glm::mat4 PVM = _camera->GetProjection() * _camera->GetView() * m_Model;
-    glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, "PVM"), 1, GL_FALSE, glm::value_ptr(PVM));
-    // Mesh
-    m_Mesh->Render();
+    m_Root->Render();
+}
+
+glm::vec3 Actor::GetPosition()
+{
+    return m_Root->GetLocalPosition();
+}
+
+glm::vec3 Actor::GetRotation()
+{
+    return m_Root->GetLocalRotation();
+}
+
+glm::vec3 Actor::GetScale()
+{
+    return m_Root->GetLocalScale();
+}
+
+void Actor::SetPosition(glm::vec3 _position)
+{
+    m_Root->SetLocalPosition(_position);
+}
+
+void Actor::SetRotation(glm::vec3 _rotation)
+{
+    m_Root->SetLocalRotation(_rotation);
+}
+
+void Actor::SetScale(glm::vec3 _scale)
+{
+    m_Root->SetLocalScale(_scale);
 }

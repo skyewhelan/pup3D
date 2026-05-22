@@ -2,42 +2,31 @@
 // Actor.h
 // Actors are objects in 3D space used to construct a scene
 // Skye Whelan
-
 #pragma once
-#include "../../Assets/Mesh.h"
-#include "../../Assets/Texture.h"
-#include "../../Assets/Shader.h"
-#include "../Misc/Camera.h"
-#include <glm.hpp>
+
+#include "../Components/TransformComponent.h"
+class Camera;
 
 class Actor
 {
 protected:
-    Mesh* m_Mesh = nullptr;
-    Texture* m_Texture = nullptr;
-    GLuint m_ShaderProgram;
-    
-    glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
-    glm::vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
-    glm::vec3 m_Scale = { 1.0f, 1.0f, 1.0f };
-    
-    glm::mat4 m_Model = glm::mat4(1.0f);
+    TransformComponent* m_Root;
     
 public:
-    Actor(Mesh* _mesh, Texture* _texture, GLuint _shaderProgram);
+    Actor();
     ~Actor();
     
-    void SetMesh(Mesh* _mesh);
-    void SetTexture(Texture* _texture);
-    void SetShaderProgram(GLuint _shaderProgram);
-    
-    Mesh* GetMesh();
-    Texture* GetTexture();
-    GLuint GetShaderProgram();
-    
-    void SetPosition(glm::vec3 _position);
-    void Rotate(glm::vec3 _rotation);
+    TransformComponent* GetRoot();
+    Component* AttachComponent(Component* _component, Component* _attachPoint = nullptr);
     
     virtual void Update(float _deltaTime);
-    virtual void Render(GLFWwindow* _window, Camera* _camera);
+    virtual void Render();
+    
+    glm::vec3 GetPosition();
+    glm::vec3 GetRotation();
+    glm::vec3 GetScale();
+    
+    void SetPosition(glm::vec3 _position);
+    void SetRotation(glm::vec3 _rotation);
+    void SetScale(glm::vec3 _scale);
 };

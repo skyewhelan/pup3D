@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <gtc/type_ptr.hpp>
 
 namespace Shader
 {
@@ -91,5 +92,53 @@ namespace Shader
         glLinkProgram(NewProgram);
         ValidateProgram(NewProgram);
         return NewProgram;
+    }
+    
+    static bool ValidateUniform(GLint _location, std::string _name)
+    {
+        if (_location == -1)
+        {
+            std::cout << "Failed to locate uniform " << _name << "\n"; 
+            return false;
+        }
+        return true;
+    }
+    
+    static void UniformF(GLuint _program, std::string _name, GLfloat _value)
+    {
+        GLint Loc = glGetUniformLocation(_program, _name.c_str());
+        if (!ValidateUniform(Loc, _name)) return;
+        glUniform1f(Loc, _value);
+    }
+    
+    static void UniformI(GLuint _program, std::string _name, GLint _value)
+    {
+        GLint Loc = glGetUniformLocation(_program, _name.c_str());
+        if (!ValidateUniform(Loc, _name)) return;
+        glUniform1i(Loc, _value);
+    }
+    
+    static void UniformVec3(GLuint _program, std::string _name, glm::vec3 _value)
+    {
+        GLint Loc = glGetUniformLocation(_program, _name.c_str());
+        if (!ValidateUniform(Loc, _name)) return;
+        glm::vec3 Val = _value;
+        glUniform3fv(Loc, 1, glm::value_ptr(Val));
+    }
+    
+    static void UniformVec4(GLuint _program, std::string _name, glm::vec4 _value)
+    {
+        GLint Loc = glGetUniformLocation(_program, _name.c_str());
+        if (!ValidateUniform(Loc, _name)) return;
+        glm::vec4 Val = _value;
+        glUniform4fv(Loc, 1, glm::value_ptr(Val));
+    }
+    
+    static void UniformMat4(GLuint _program, std::string _name, glm::mat4 _value)
+    {
+        GLint Loc = glGetUniformLocation(_program, _name.c_str());
+        if (!ValidateUniform(Loc, _name)) return;
+        glm::mat4 Val = _value;
+        glUniformMatrix4fv(Loc, 1, GL_FALSE, glm::value_ptr(Val));
     }
 }
