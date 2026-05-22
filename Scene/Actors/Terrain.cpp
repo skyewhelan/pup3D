@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Terrain.cpp
+// 
+// Skye Whelan
+
 #include "Terrain.h"
 
 #include <glew.h>
@@ -11,15 +16,16 @@
 #include "../../Assets/TextureAsset.h"
 #include "../Components/Cameras/Camera.h"
 
-Terrain::Terrain()
+Terrain::Terrain(std::string _heightmap)
 {
+    LoadHeightmap(_heightmap);
 }
 
 Terrain::Terrain(std::string _heightmap, float _spacing, float _heightScale, float _yOffset)
 {
     m_Spacing = _spacing;
     m_HeightScale = _heightScale;
-    m_Offset.y = _yOffset;
+    m_VertexOffset.y = _yOffset;
     LoadHeightmap(_heightmap);
 }
 
@@ -51,21 +57,21 @@ void Terrain::LoadHeightmap(std::string _fileName)
     // Squirt (sqrt) is the number of rows or columns
     unsigned int Squirt = sqrt(m_VertexCount);
     
-    m_Offset.x = (-(float)Squirt * m_Spacing) / 2.0f;
-    m_Offset.z = (-(float)Squirt * m_Spacing) / 2.0f;
+    m_VertexOffset.x = (-(float)Squirt * m_Spacing) / 2.0f;
+    m_VertexOffset.z = (-(float)Squirt * m_Spacing) / 2.0f;
     
     auto Minmax = std::ranges::minmax(HeightMap);
-    m_MinHeight = (Minmax.min * m_HeightScale) + m_Offset.y;
-    m_MaxHeight = (Minmax.max * m_HeightScale) + m_Offset.y;
+    m_MinHeight = (Minmax.min * m_HeightScale) + m_VertexOffset.y;
+    m_MaxHeight = (Minmax.max * m_HeightScale) + m_VertexOffset.y;
     
     for (unsigned int Row = 0; Row < Squirt; Row++)
     {   
         for (unsigned int Col = 0; Col < Squirt; Col++)
         {
             // Position
-            Vertices.push_back(((GLfloat)Col * m_Spacing) + m_Offset.x);                           // Pos X
-            Vertices.push_back((HeightMap[(Row * Squirt) + Col] * m_HeightScale) + m_Offset.y);    // Pos Y
-            Vertices.push_back(((GLfloat)Row * m_Spacing) + m_Offset.z);                           // Pos Z
+            Vertices.push_back(((GLfloat)Col * m_Spacing) + m_VertexOffset.x);                           // Pos X
+            Vertices.push_back((HeightMap[(Row * Squirt) + Col] * m_HeightScale) + m_VertexOffset.y);    // Pos Y
+            Vertices.push_back(((GLfloat)Row * m_Spacing) + m_VertexOffset.z);                           // Pos Z
             
             // Tex Coords
             Vertices.push_back((GLfloat)Col / (GLfloat)Squirt); // Tex X
@@ -127,10 +133,25 @@ void Terrain::LoadHeightmap(std::string _fileName)
     // Shaders
     m_ShaderProgram = Shader::CreateProgram({
         Shader::Compile("Resources/Shaders/Terrain.vert", GL_VERTEX_SHADER),
-        Shader::Compile("Resources/Shaders/TerrainColor.frag", GL_FRAGMENT_SHADER)
+        Shader::Compile("Resources/Shaders/TerrainTexture.frag", GL_FRAGMENT_SHADER)
     });
     
     glPointSize(5.0f);
+}
+
+void Terrain::Update(float _terrain)
+{
+    // Reset to identity
+    m_Model = glm::mat4(1.0f);
+    
+    // Scale should be set via m_Spacing (XZ) and m_HeightScale (Y)
+    
+    // Rotate
+    m_Model = glm::rotate(m_Model, glm::radians(m_Rotation.x), { 1.0f, 0.0f, 0.0f });
+    m_Model = glm::rotate(m_Model, glm::radians(m_Rotation.y), { 0.0f, 1.0f, 0.0f });
+    m_Model = glm::rotate(m_Model, glm::radians(m_Rotation.z), { 0.0f, 0.0f, 1.0f });
+    // Translate
+    m_Model = glm::translate(m_Model, m_Position);
 }
 
 void Terrain::Render()
@@ -141,11 +162,11 @@ void Terrain::Render()
     glBindTexture(GL_TEXTURE_2D, m_Texture->GetID());
     
     Camera* Cam = RS::GetRenderCamera();
-    Shader::UniformMat4(m_ShaderProgram, "PVM", Cam->GetProjection() * Cam->GetView() * glm::mat4(1.0f));
-    Shader::UniformMat4(m_ShaderProgram, "Model", glm::mat4(1.0f));
-    Shader::UniformVec4(m_ShaderProgram, "Material.Albedo", {1.0f, 1.0f, 1.0f, 1.0f});
-    //Shader::UniformI(m_ShaderProgram, "Material.Texture", 0);
-    //Shader::UniformF(m_ShaderProgram, "Tiling", 100.0f);
+    Shader::UniformMat4(m_ShaderProgram, "PVM", Cam->GetProjection() * Cam->GetView() * m_Model);
+    Shader::UniformMat4(m_ShaderProgram, "Model", m_Model);
+    Shader::UniformVec4(m_ShaderProgram, "Material.Albedo", {1.5f, 1.5f, 1.5f, 1.0f});
+    Shader::UniformI(m_ShaderProgram, "Material.Texture", 0);
+    Shader::UniformF(m_ShaderProgram, "Tiling", 100.0f);
     Shader::UniformF(m_ShaderProgram, "MinHeight", m_MinHeight);
     Shader::UniformF(m_ShaderProgram, "MaxHeight", m_MaxHeight);
     
@@ -155,4 +176,14 @@ void Terrain::Render()
     
     glBindVertexArray(0);
     glUseProgram(0);
+}
+
+void Terrain::SetPosition(glm::vec3 _position)
+{
+    m_Position = _position;
+}
+
+void Terrain::SetRotation(glm::vec3 _rotation)
+{
+    m_Rotation = _rotation;
 }

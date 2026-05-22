@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Skybox.h
+// An inverted cube displaying a cubemap, rendered behind the scene
+// Skye Whelan
+
 #pragma once
 #include <glew.h>
 #include <glfw3.h>

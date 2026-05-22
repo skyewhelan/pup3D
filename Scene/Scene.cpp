@@ -28,17 +28,25 @@ void Scene::ConstructScene()
 void Scene::Update(float _deltaTime)
 {
     m_MainCamera->Update(_deltaTime);
-    for (auto EachActor : m_Actors)
+    for (auto Pair : m_Actors)
     {
-        EachActor.second->Update(_deltaTime);
+        Pair.second->Update(_deltaTime);
+    }
+    for (auto Pair : m_Terrains)
+    {
+        Pair.second->Update(_deltaTime);
     }
 }
 
 void Scene::Render(GLFWwindow* _window)
 {
-    for (auto EachActor : m_Actors)
+    for (auto Pair : m_Actors)
     {
-        EachActor.second->Render();
+        Pair.second->Render();
+    }
+    for (auto Pair : m_Terrains)
+    {
+        Pair.second->Render();
     }
     if (m_Skybox)
     {
@@ -49,6 +57,11 @@ void Scene::Render(GLFWwindow* _window)
 Actor* Scene::GetActor(std::string _name)
 {
     return m_Actors[_name];
+}
+
+Terrain* Scene::GetTerrain(std::string _name)
+{
+    return m_Terrains[_name];
 }
 
 MeshAsset* Scene::GetMesh(std::string _name)
@@ -75,6 +88,12 @@ Actor* Scene::AddActor(std::string _name, Actor* _actor)
 {
     m_Actors.insert({ _name, _actor });
     return _actor;
+}
+
+Terrain* Scene::AddTerrain(std::string _name, Terrain* _terrain)
+{
+    m_Terrains.insert({ _name, _terrain });
+    return _terrain;
 }
 
 MeshAsset* Scene::AddMesh(std::string _name, MeshAsset* _mesh)

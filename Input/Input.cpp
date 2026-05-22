@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Input.cpp
+//
+// Skye Whelan
+
 #include "Input.h"
 #include "InputReceiver.h"
 

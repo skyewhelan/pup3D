@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Skybox.cpp
+// 
+// Skye Whelan
+
 #include "Skybox.h"
 
 #include <glew.h>

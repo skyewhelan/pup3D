@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// MeshComponent.h
+// A component responsible for positioning and rendering a mesh
+// Skye Whelan
+
 #pragma once
 #include "TransformComponent.h"
 #include "../../Assets/Material.h"

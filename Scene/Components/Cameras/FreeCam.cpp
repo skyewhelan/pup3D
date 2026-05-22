@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// FreeCam.cpp
+// 
+// Skye Whelan
+
 #include "FreeCam.h"
 #include "../../Input/Input.h"
 

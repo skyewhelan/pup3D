@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Component.cpp
+// 
+// Skye Whelan
+
 #include "Component.h"
 #include "../Actors/Actor.h"
 #include "TransformComponent.h"

@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// EyeCam.cpp
+// 
+// Skye Whelan
+
 #include "EyeCam.h"
 #include <gtc/matrix_transform.hpp>
 

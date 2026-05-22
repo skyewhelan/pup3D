@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// FreeCam.h
+// An EyeCam which can be moved with WASD input
+// Skye Whelan
+
 #pragma once
 #include "EyeCam.h"
 

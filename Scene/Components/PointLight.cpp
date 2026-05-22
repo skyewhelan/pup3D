@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// PointLight.cpp
+// 
+// Skye Whelan
+
 #include "PointLight.h"
 
 #include "../../Core/RenderSettings.h"

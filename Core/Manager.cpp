@@ -28,9 +28,6 @@ int Manager::Initialize()
     
     Input::Initialize(m_Window);
     
-    m_Terrain = new Terrain();
-    m_Terrain->LoadHeightmap("heightmap.save");
-    
     m_ActiveScene = new TestScene();
     
     while (!glfwWindowShouldClose(m_Window))
@@ -78,7 +75,6 @@ void Manager::Render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glViewport(0, 0, RenderRes.x, RenderRes.y);
-    m_Terrain->Render();
     m_ActiveScene->Render(m_Window);
     
     glBindFramebuffer(GL_READ_FRAMEBUFFER, FB->GetMultisampleFBO());

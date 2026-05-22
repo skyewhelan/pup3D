@@ -12,6 +12,7 @@
 #include "../Assets/TextureAsset.h"
 #include "Actors/Actor.h"
 #include "Components/Cameras/Camera.h"
+#include "Actors/Terrain.h"
 
 class Material;
 
@@ -23,6 +24,8 @@ protected:
     Skybox* m_Skybox = nullptr;
     // Actors in the scene, mapped to names
     std::map<std::string, Actor*> m_Actors;
+    // Terrains in the scene, mapped to names
+    std::map<std::string, Terrain*> m_Terrains;
     // Meshes used by the scene, mapped to names
     std::map<std::string, MeshAsset*> m_Meshes;
     // Textures used by the scene, mapped to names
@@ -45,12 +48,14 @@ public:
     virtual void Render(GLFWwindow* _window);
     
     Actor* GetActor(std::string _name);
+    Terrain* GetTerrain(std::string _name);
     MeshAsset* GetMesh(std::string _name);
     TextureAsset* GetTexture(std::string _name);
     GLuint GetShaderProgram(std::string _name);
     Material* GetMaterial(std::string _name);
     
     Actor* AddActor(std::string _name, Actor* _actor);
+    Terrain* AddTerrain(std::string _name, Terrain* _terrain);
     MeshAsset* AddMesh(std::string _name, MeshAsset* _mesh);
     TextureAsset* AddTexture(std::string _name, TextureAsset* _texture);
     GLuint AddShaderProgram(std::string _name, GLuint _shaderProgram);

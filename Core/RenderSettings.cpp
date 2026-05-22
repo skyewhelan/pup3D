@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// RenderSettings.cpp
+// 
+// Skye Whelan
+
 #include "RenderSettings.h"
 
 #include "Framebuffer.h"

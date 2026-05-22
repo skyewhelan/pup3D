@@ -65,6 +65,10 @@ void TestScene::ConstructScene()
     m_MainCamera = m_FreeCam;
     RS::SetRenderCamera(m_MainCamera);
     
+    // Terrain
+    Terrain* Land = AddTerrain("Terrain", new Terrain("heightmap.save"));
+    Land->SetPosition({0.0f, -10.0f, 0.0f});
+    
     // Actors
     Actor* MainBox = AddActor("MainBox", new Actor());
     MainBox->AttachComponent(new MeshComponent(GetMesh("Cube"), GetMaterial("TestMat")));

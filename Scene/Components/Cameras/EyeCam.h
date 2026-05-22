@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// EyeCam.h
+// A camera that can be rotated using mouse input
+// Skye Whelan
+
 #pragma once
 #include "Camera.h"
 #include "../../Input/InputReceiver.h"

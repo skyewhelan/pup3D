@@ -20,5 +20,7 @@ void main()
     TexCoords = inTexCoords;
     FragNormal = mat3(transpose(inverse(Model))) * inVertexNormal;
     FragPosition = vec3(Model * vec4(inVertexPos, 1.0f));
+    
     NormalisedHeight = (inVertexPos.y - MinHeight) / (MaxHeight - MinHeight);
+    NormalisedHeight = 1 - pow(1 - NormalisedHeight, 2);
 }

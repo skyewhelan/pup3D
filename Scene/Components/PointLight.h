@@ -1,4 +1,11 @@
+// pup3D - puppy powered engine
+// PointLight.cpp
+// A component that projects light outwards in all directions from a single point
+// Skye Whelan
+
 #pragma once
+#include <glew.h>
+
 #include "TransformComponent.h"
 
 class PointLight : public TransformComponent

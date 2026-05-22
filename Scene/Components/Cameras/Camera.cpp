@@ -1,9 +1,14 @@
+// pup3D - puppy powered engine
+// Camera.cpp
+// 
+// Skye Whelan
+
 #include "Camera.h"
 #include <gtc/matrix_transform.hpp>
 
 Camera::Camera()
 {
-    m_Projection = glm::perspective(glm::radians(m_FOV), 16.0f / 9.0f, 0.1f, 100.0f);
+    m_Projection = glm::perspective(glm::radians(m_FOV), 16.0f / 9.0f, 0.1f, 500.0f);
 }
 
 Camera::~Camera()

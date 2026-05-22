@@ -1,6 +1,9 @@
+// pup3D - puppy powered engine
+// Component.h
+// Base class for components, which are attachments that can be added to an actor
+// Skye Whelan
+
 #pragma once
-#include <glew.h>
-#include <glfw3.h>
 #include <string>
 #include <vector>
 class Actor;

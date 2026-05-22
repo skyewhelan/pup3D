@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Camera.h
+// Defines a camera through which the scene can be rendered and viewed
+// Skye Whelan
+
 #pragma once
 #include <glm.hpp>
 

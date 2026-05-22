@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// MeshComponent.cpp
+// 
+// Skye Whelan
+
 #include "MeshComponent.h"
 
 #include <gtc/type_ptr.hpp>

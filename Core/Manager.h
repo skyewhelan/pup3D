@@ -7,17 +7,12 @@
 #include "../Scene/Scene.h"
 #include "../Input/InputReceiver.h"
 
-class Terrain;
-
 class Manager :public InputReceiver
 {
 private:
-    
     float m_CurrentTime = 0.0f; // Time elapsed since glfw initialisation
     float m_PreviousTime = 0.0f; // CurrentTime as of the previous update step
     float m_DeltaTime = 0.0f; // Time elapsed since the previous update step
-    
-    Terrain* m_Terrain = nullptr;
     Scene* m_ActiveScene = nullptr; // The scene that is currently being rendered
     
     GLFWwindow* m_Window = nullptr; // Current window

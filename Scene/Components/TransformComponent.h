@@ -1,5 +1,10 @@
+// pup3D - puppy powered engine
+// TransformComponent.h
+// A component that defines a transform. All actors require one of these as the root component
+// Skye Whelan
+
 #pragma once
-#include "Component.h"'
+#include "Component.h"
 #include <glm.hpp>
 
 class TransformComponent : public Component

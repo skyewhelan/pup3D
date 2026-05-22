@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// OrbitCam.h
+// A camera that orbits at a radius around a central point
+// Skye Whelan
+
 #pragma once
 #include "Camera.h"
 

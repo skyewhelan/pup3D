@@ -676,6 +676,7 @@
     <Content Include="Resources\Shaders\Skybox.vert" />
     <Content Include="Resources\Shaders\Terrain.vert" />
     <Content Include="Resources\Shaders\TerrainColor.frag" />
+    <Content Include="Resources\Shaders\TerrainTexture.frag" />
     <Content Include="Resources\Shaders\UnlitColor.frag" />
     <Content Include="Resources\Shaders\UnlitTexture.frag" />
     <Content Include="Resources\Textures\Skybox\back.jpg" />

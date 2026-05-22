@@ -1,3 +1,8 @@
+// pup3D - puppy powered engine
+// Framebuffer.cpp
+// 
+// Skye Whelan
+
 #include "Framebuffer.h"
 #include "../../Resources/Shape.h"
 
