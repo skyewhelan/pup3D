@@ -21,17 +21,18 @@ TestScene::TestScene()
 void TestScene::GenerateAssets()
 {
     Scene::GenerateAssets();
-        
+    
     // Meshes
     AddMesh("Cube", new MeshAsset(Shape::Cube()));
     AddMesh("Sphere", new MeshAsset(Shape::Sphere(0.5, 24)));
     
     // Textures
     AddTexture("BrickWall", new TextureAsset("Resources/Textures/test.png"));
+    AddTexture("Ground", new TextureAsset("Resources/Textures/ground.png"));
     
     // Shaders
     GLuint Vert = Shader::Compile("Resources/Shaders/3DNormals.vert", GL_VERTEX_SHADER);
-    GLuint Frag = Shader::Compile("Resources/Shaders/BlinnPhong.frag", GL_FRAGMENT_SHADER);
+    GLuint Frag = Shader::Compile("Resources/Shaders/BlinnPhongTiled.frag", GL_FRAGMENT_SHADER);
     AddShaderProgram("BlinnPhong", Shader::CreateProgram({Vert, Frag}));
     
     Frag = Shader::Compile("Resources/Shaders/UnlitColor.frag", GL_FRAGMENT_SHADER);
@@ -40,12 +41,21 @@ void TestScene::GenerateAssets()
     Frag = Shader::Compile("Resources/Shaders/UnlitTexture.frag", GL_FRAGMENT_SHADER);
     AddShaderProgram("UnlitTexture", Shader::CreateProgram({Vert, Frag}));
     
-    AddMaterial("TestMat", new Material(GetTexture("BrickWall"), GetShaderProgram("BlinnPhong"), true));
-    Material* Blue = AddMaterial("UnlitColor", new Material(nullptr, GetShaderProgram("UnlitColor"), false));
+    Frag = Shader::Compile("Resources/Shaders/BlinnPhongTiled.frag", GL_FRAGMENT_SHADER);
+    AddShaderProgram("E", Shader::CreateProgram({Vert, Frag}));
+    
+    Material* Mat = AddMaterial("TestMat", new Material(GetTexture("BrickWall"), GetShaderProgram("BlinnPhong"), true));
+    Mat->AddParamFloat("Tiling", 1.0f);
+    
     AddMaterial("UnlitTexture", new Material(GetTexture("BrickWall"), GetShaderProgram("UnlitTexture"), false));
+    
+    Material* Blue = AddMaterial("UnlitColor", new Material(nullptr, GetShaderProgram("UnlitColor"), false));
     
     Material* Green = AddMaterial("Green", new Material(*Blue));
     Green->SetParamVec4("Albedo", {0.0f, 1.0f, 0.0f, 1.0f});
+    
+    Material* Terrain = AddMaterial("Terrain", new Material(*Mat));
+    Terrain->SetParamFloat("Tiling", 128.0f);
     
     GetMaterial("UnlitColor")->SetParamVec4("Albedo", {0.3f, 0.0f, 1.0f, 1.0f});
 }
@@ -57,16 +67,14 @@ void TestScene::ConstructScene()
     m_Skybox = new Skybox("Resources/Textures/Skybox/blink/");
     
     m_FreeCam = new FreeCam();
-    m_FreeCam->SetPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+    m_FreeCam->SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     m_OrbitCam = new OrbitCam({}, 1.0f, 5.0f);
-    m_EyeCam = new EyeCam();
-    m_EyeCam->SetPosition(glm::vec3(0.0f, 0.0f, 3.0f));
     
     m_MainCamera = m_FreeCam;
     RS::SetRenderCamera(m_MainCamera);
     
     // Terrain
-    Terrain* Land = AddTerrain("Terrain", new Terrain("heightmap.save"));
+    Terrain* Land = AddTerrain("Terrain", new Terrain("2x2-island.raw", GetMaterial("Terrain")));
     Land->SetPosition({0.0f, -10.0f, 0.0f});
     
     // Actors

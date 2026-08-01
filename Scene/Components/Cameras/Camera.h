@@ -6,12 +6,13 @@
 #pragma once
 #include <glm.hpp>
 
-class Camera
+#include "../TransformComponent.h"
+
+class Camera : public TransformComponent
 {
 protected:
     float m_FOV = 70.0f;
     
-    glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
     glm::vec3 m_Forward = { 0.0f, 0.0f, -1.0f };
     glm::vec3 m_Up = { 0.0f, 0.0f, 0.0f };
     glm::vec3 m_Right = { 0.0f, 0.0f, 0.0f };
@@ -24,10 +25,10 @@ public:
     
     virtual void Update(float _deltaTime);
     
-    void SetPosition(glm::vec3 _position);
+    void SetLocalPosition(glm::vec3 _position);
     void SetForward(glm::vec3 _forward);
     
-    glm::vec3 GetPosition();
+    glm::vec3 GetLocalPosition();
     glm::vec3 GetForward();
     glm::vec3 GetUp();
     glm::vec3 GetRight();

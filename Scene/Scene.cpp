@@ -5,6 +5,8 @@
 
 #include "Scene.h"
 
+#include <iostream>
+
 Scene::Scene()
 {
     GenerateAssets();
@@ -56,22 +58,47 @@ void Scene::Render(GLFWwindow* _window)
 
 Actor* Scene::GetActor(std::string _name)
 {
-    return m_Actors[_name];
+    Actor* Get = m_Actors[_name];
+    if (!Get)
+    {
+        std::cout << "GetActor could not find Actor " << _name << " in scene " << m_SceneName << ",  returning nullptr\n";
+    }
+        
+    return Get;
 }
 
 Terrain* Scene::GetTerrain(std::string _name)
 {
-    return m_Terrains[_name];
+    Terrain* Get = m_Terrains[_name];
+    if (!Get)
+    {
+        std::cout << "GetTerrain could not find Terrain " << _name << " in scene " << m_SceneName << ",  returning nullptr\n";
+    }
+        
+    return Get;
 }
 
 MeshAsset* Scene::GetMesh(std::string _name)
 {
-    return m_Meshes[_name];
+    
+    MeshAsset* Get = m_Meshes[_name];
+    if (!Get)
+    {
+        std::cout << "GetMesh could not find MeshAsset " << _name << " in scene " << m_SceneName << ",  returning nullptr\n";
+    }
+        
+    return Get;
 }
 
 TextureAsset* Scene::GetTexture(std::string _name)
 {
-    return m_Textures[_name];
+    TextureAsset* Get = m_Textures[_name];
+    if (!Get)
+    {
+        std::cout << "GetTexture could not find TextureAsset " << _name << " in scene " << m_SceneName << ",  returning nullptr\n";
+    }
+        
+    return Get;
 }
 
 GLuint Scene::GetShaderProgram(std::string _name)
@@ -81,7 +108,13 @@ GLuint Scene::GetShaderProgram(std::string _name)
 
 Material* Scene::GetMaterial(std::string _name)
 {
-    return m_Materials[_name];
+    Material* Get = m_Materials[_name];
+    if (!Get)
+    {
+        std::cout << "GetMaterial could not find Material " << _name << " in scene " << m_SceneName << ",  returning nullptr\n";
+    }
+        
+    return Get;
 }
 
 Actor* Scene::AddActor(std::string _name, Actor* _actor)

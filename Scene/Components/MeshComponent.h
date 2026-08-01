@@ -12,12 +12,10 @@ class TextureAsset;
 class MeshComponent : public TransformComponent
 {
     MeshAsset* m_Mesh = nullptr;
-    TextureAsset* m_Texture = nullptr;
     Material* m_Material = nullptr;
     GLuint m_ShaderProgram;
 
 public:
-    MeshComponent(MeshAsset* _mesh, TextureAsset* _texture, GLuint _shaderProgram);
     MeshComponent(MeshAsset* _mesh, Material* _material);
     
     void Update(float _deltaTime) override;
@@ -28,6 +26,5 @@ public:
     GLuint GetShaderProgram();
     
     void SetMesh(MeshAsset* _mesh);
-    void SetTexture(TextureAsset* _texture);
     void SetShaderProgram(GLuint _shaderProgram);
 };

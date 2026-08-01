@@ -27,7 +27,7 @@ private:
     // Rendering
     bool m_IsBorderless = true;
     bool m_IsWireframe = false;
-    glm::ivec2 m_RenderResolution = {1920, 1080};
+    glm::ivec2 m_RenderResolution = {1280, 720};
     glm::ivec2 m_OutputResolution = {1280, 720};
     GLint m_RenderTextureFilter = GL_LINEAR;
     int m_Samples = 4;

@@ -19,6 +19,7 @@ class Material;
 class Scene
 {
 protected:
+    std::string m_SceneName;
     // Camera through which the scene is rendered
     Camera* m_MainCamera = nullptr;
     Skybox* m_Skybox = nullptr;

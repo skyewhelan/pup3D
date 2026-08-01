@@ -82,7 +82,7 @@ void main()
     
     for (int i = 0; i < PointLightCount; i++)
     {
-       FinalLight += CalculatePointLight(PointLights[i]); 
+        FinalLight += CalculatePointLight(PointLights[i]); 
     }
     
     vec4 FinalColor = Material.Albedo * vec4(FinalLight, 1.0f) * texture(Material.Texture, TexCoords);

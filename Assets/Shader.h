@@ -53,13 +53,17 @@ namespace Shader
     // Check if a shader program was successfully compiled
     static bool ValidateProgram(GLuint _program)
     {
-        int Success;
-        char InfoLog[512];
+        int Success;    
+        GLchar InfoLog[512];
+        GLsizei Size;
         
         glGetProgramiv(_program, GL_LINK_STATUS, &Success);
+        glValidateProgram(_program);
+        glGetProgramInfoLog(_program, 512, &Size, InfoLog);
+        std::cout << InfoLog << "\n";
         if(!Success)
         {
-            glGetProgramInfoLog(_program, 512, NULL, InfoLog);
+            
             std::cout << "Failed to validate shader program " << _program << ":\n" << InfoLog << "\n";
         }
         

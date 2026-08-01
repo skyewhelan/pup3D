@@ -638,6 +638,7 @@
     <ClInclude Include="Assets\TextureAsset.h" />
     <ClInclude Include="Core\Framebuffer.h" />
     <ClInclude Include="Core\RenderSettings.h" />
+    <ClInclude Include="Core\Utils.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputReceiver.h" />
     <ClInclude Include="Resources\Shape.h" />
@@ -659,6 +660,7 @@
   <ItemGroup>
     <Content Include="Resources\Shaders\3DNormals.vert" />
     <Content Include="Resources\Shaders\BlinnPhong.frag" />
+    <Content Include="Resources\Shaders\BlinnPhongTiled.frag" />
     <Content Include="Resources\Shaders\CheckNormals.frag" />
     <Content Include="Resources\Shaders\CheckTexCoords.frag" />
     <Content Include="Resources\Shaders\Old\2Dbasic.frag" />

@@ -92,6 +92,7 @@ void Framebuffer::Render()
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT);
     
+    if (RS::IsWireframe()) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     
     glEnable(GL_FRAMEBUFFER_SRGB); 
     glDisable(GL_DEPTH_TEST);
@@ -107,7 +108,9 @@ void Framebuffer::Render()
     glBindVertexArray(0);
     glUseProgram(0);
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_FRAMEBUFFER_SRGB); 
+    glDisable(GL_FRAMEBUFFER_SRGB);
+    
+    if (RS::IsWireframe()) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     
 }
 

@@ -15,21 +15,24 @@
 #include "../../Core/RenderSettings.h"
 #include "../../Assets/TextureAsset.h"
 #include "../Components/Cameras/Camera.h"
+#include "../../Assets/Material.h"
 
-Terrain::Terrain(std::string _heightmap)
+Terrain::Terrain(std::string _heightmap, Material* _material)
 {
-    LoadHeightmap(_heightmap);
+    m_Material = _material;
+    LoadHeightmap(_heightmap, _material);
 }
 
-Terrain::Terrain(std::string _heightmap, float _spacing, float _heightScale, float _yOffset)
+Terrain::Terrain(std::string _heightmap, Material* _material, float _spacing, float _heightScale, float _yOffset)
 {
     m_Spacing = _spacing;
     m_HeightScale = _heightScale;
     m_VertexOffset.y = _yOffset;
-    LoadHeightmap(_heightmap);
+    m_Material = _material;
+    LoadHeightmap(_heightmap, _material);
 }
 
-void Terrain::LoadHeightmap(std::string _fileName)
+void Terrain::LoadHeightmap(std::string _fileName, Material* _material)
 {
     auto size = std::filesystem::file_size("Resources/HeightMaps/" + _fileName);
     m_VertexCount = size / sizeof(float);
@@ -46,23 +49,22 @@ void Terrain::LoadHeightmap(std::string _fileName)
         File.close();
     }
     
-    // for (unsigned int i = 0; i < m_VertexCount; i++)
-    // {
-    //     std::cout << HeightMap[i] << " ";
-    // }
-    
-    // Vertex Data
-    std::vector<GLfloat> Vertices;
-    
     // Squirt (sqrt) is the number of rows or columns
     unsigned int Squirt = sqrt(m_VertexCount);
     
+    // Offset to center the mesh on the terrain position
     m_VertexOffset.x = (-(float)Squirt * m_Spacing) / 2.0f;
     m_VertexOffset.z = (-(float)Squirt * m_Spacing) / 2.0f;
     
+    // Find lowest and highest final heights for use in shaders
     auto Minmax = std::ranges::minmax(HeightMap);
     m_MinHeight = (Minmax.min * m_HeightScale) + m_VertexOffset.y;
     m_MaxHeight = (Minmax.max * m_HeightScale) + m_VertexOffset.y;
+    
+    // Vertex Data
+    std::vector<GLfloat> Vertices;
+    // Index Data
+    std::vector<GLuint> Indices;
     
     for (unsigned int Row = 0; Row < Squirt; Row++)
     {   
@@ -77,26 +79,53 @@ void Terrain::LoadHeightmap(std::string _fileName)
             Vertices.push_back((GLfloat)Col / (GLfloat)Squirt); // Tex X
             Vertices.push_back((GLfloat)Row / (GLfloat)Squirt); // Tex Y      
             
-            // Normals
+            // Normals - calculated at a later step but space must be allocated here
             Vertices.push_back(0.0f);   // Normal X
-            Vertices.push_back(1.0f);   // Normal Y
+            Vertices.push_back(0.0f);   // Normal Y
             Vertices.push_back(0.0f);   // Normal Z
+            
+            // Indices
+            if (Row < Squirt - 1 && Col < Squirt - 1)
+            {
+                Indices.push_back((Row * Squirt) + Col);            // Top left
+                Indices.push_back(((Row + 1) * Squirt) + Col);      // Bottom left
+                Indices.push_back((Row * Squirt) + Col + 1);        // Top right
+
+                Indices.push_back((Row * Squirt) + Col + 1);        // Top right
+                Indices.push_back(((Row + 1) * Squirt) + Col);      // Bottom left
+                Indices.push_back(((Row + 1) * Squirt) + Col + 1);  // Bottom right
+            }
         }
     }
     
-    std::vector<GLuint> Indices;
     
-    for (unsigned int Row = 0; Row < Squirt - 1; Row++)
+    // Normals need their own loop
+    
+    unsigned int Stride = 5;
+    for (unsigned int Row = 0; Row < Squirt; Row++)
     {
-        for (unsigned int Col = 0; Col < Squirt - 1; Col++)
+        for (unsigned int Col = 0; Col < Squirt; Col++)
         {
-            Indices.push_back((Row * Squirt) + Col);            // Top left
-            Indices.push_back(((Row + 1) * Squirt) + Col);      // Bottom left
-            Indices.push_back((Row * Squirt) + Col + 1);        // Top right
-
-            Indices.push_back((Row * Squirt) + Col + 1);        // Top right
-            Indices.push_back(((Row + 1) * Squirt) + Col);      // Bottom left
-            Indices.push_back(((Row + 1) * Squirt) + Col + 1);  // Bottom right
+            // Clamp to ensure we cannot access vertices out of range
+            unsigned int PrevRow = std::max(0, (int)Row - 1);
+            unsigned int NextRow = std::min(Squirt - 1, Row + 1);
+            unsigned int PrevCol = std::max(0, (int)Col - 1);
+            unsigned int NextCol = std::min(Squirt - 1, Col + 1);
+            
+            // Find surrounding vertices
+            float Up = HeightMap[(PrevRow * Squirt) + Col] * m_HeightScale;
+            float Down = HeightMap[(NextRow * Squirt) + Col] * m_HeightScale;
+            float Left = HeightMap[(Row * Squirt) + PrevCol] * m_HeightScale;
+            float Right = HeightMap[(Row * Squirt) + NextCol] * m_HeightScale;
+            
+            float dx = (Right - Left) / (2.0f * m_Spacing);
+            float dz = (Up - Down) / (2.0f * m_Spacing);
+            glm::vec3 Normal = glm::normalize(glm::vec3(dx, 1.0, dz));
+            
+            Vertices[(Row * Squirt) + Col + Stride] = Normal.x;
+            Vertices[(Row * Squirt) + Col + Stride + 1] = Normal.y;
+            Vertices[(Row * Squirt) + Col + Stride + 2] = Normal.z;
+            Stride += 7;
         }
     }
     
@@ -128,14 +157,6 @@ void Terrain::LoadHeightmap(std::string _fileName)
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
     
-    m_Texture = new TextureAsset("Resources/Textures/ground.png");
-    
-    // Shaders
-    m_ShaderProgram = Shader::CreateProgram({
-        Shader::Compile("Resources/Shaders/Terrain.vert", GL_VERTEX_SHADER),
-        Shader::Compile("Resources/Shaders/TerrainTexture.frag", GL_FRAGMENT_SHADER)
-    });
-    
     glPointSize(5.0f);
 }
 
@@ -156,22 +177,25 @@ void Terrain::Update(float _terrain)
 
 void Terrain::Render()
 {
-    glUseProgram(m_ShaderProgram);
+    glUseProgram(m_Material->GetShaderProgram());
     
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Texture->GetID());
+    if (m_Material->GetTexture())
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_Material->GetTexture()->GetID());
+    }
     
     Camera* Cam = RS::GetRenderCamera();
-    Shader::UniformMat4(m_ShaderProgram, "PVM", Cam->GetProjection() * Cam->GetView() * m_Model);
-    Shader::UniformMat4(m_ShaderProgram, "Model", m_Model);
-    Shader::UniformVec4(m_ShaderProgram, "Material.Albedo", {1.5f, 1.5f, 1.5f, 1.0f});
-    Shader::UniformI(m_ShaderProgram, "Material.Texture", 0);
-    Shader::UniformF(m_ShaderProgram, "Tiling", 100.0f);
-    Shader::UniformF(m_ShaderProgram, "MinHeight", m_MinHeight);
-    Shader::UniformF(m_ShaderProgram, "MaxHeight", m_MaxHeight);
+    Shader::UniformMat4(m_Material->GetShaderProgram(), "PVM", Cam->GetProjection() * Cam->GetView() * m_Model);
+    Shader::UniformMat4(m_Material->GetShaderProgram(), "Model", m_Model);
+    m_Material->SetUniforms();
+    //Shader::UniformVec4(m_ShaderProgram, "Material.Albedo", {1.5f, 1.5f, 1.5f, 1.0f});
+    //Shader::UniformI(m_ShaderProgram, "Material.Texture", 0);
+    //Shader::UniformF(m_ShaderProgram, "Tiling", 50.0f);
+    //Shader::UniformF(m_ShaderProgram, "MinHeight", m_MinHeight);
+    //Shader::UniformF(m_ShaderProgram, "MaxHeight", m_MaxHeight);
     
     glBindVertexArray(m_VAO);
-    //glDrawArrays(GL_POINTS, 0, m_VertexCount);
     glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, 0);
     
     glBindVertexArray(0);

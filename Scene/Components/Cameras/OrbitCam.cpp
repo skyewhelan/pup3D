@@ -20,7 +20,7 @@ void OrbitCam::Update(float _deltaTime)
 {
     m_OrbitTime = std::fmod(m_OrbitTime + (_deltaTime * m_Speed), 360.0f);
     
-    m_Position = m_Origin + glm::vec3(sin(m_OrbitTime) * m_Radius, 0.0f, cos(m_OrbitTime) * m_Radius);
-    m_Forward = m_Origin - m_Position;
+    m_LocalPosition = m_Origin + glm::vec3(sin(m_OrbitTime) * m_Radius, 0.0f, cos(m_OrbitTime) * m_Radius);
+    m_Forward = m_Origin - m_LocalPosition;
     Camera::Update(_deltaTime);
 }

@@ -9,6 +9,7 @@
 #include <glm.hpp>
 #include <vector>
 
+class Material;
 class TextureAsset;
 
 class Terrain
@@ -16,7 +17,7 @@ class Terrain
     // Space between each vertex on the X and Z axes
     float m_Spacing = 0.75f;
     // Scalar for heightmap values
-    float m_HeightScale = 0.1f;
+    float m_HeightScale = 0.35f;
     // Offset to apply when loading vertices; X and Z generated in LoadHeightmap(). Mesh will end up centered.
     glm::vec3 m_VertexOffset = { 0.0f, -10.0f, 0.0f };
     // Terrain's position in world space
@@ -37,14 +38,13 @@ class Terrain
     GLuint m_VBO;
     GLuint m_EBO;
     GLuint m_VAO;
-    GLuint m_ShaderProgram;
-    TextureAsset* m_Texture;
+    Material* m_Material = nullptr;
 public:
-    Terrain(std::string _heightmap);
-    Terrain(std::string _heightmap, float _spacing, float _heightScale, float _yOffset);
+    Terrain(std::string _heightmap, Material* _material);
+    Terrain(std::string _heightmap, Material* _material, float _spacing, float _heightScale, float _yOffset);
     
     // Generate terrain mesh from heightmap
-    void LoadHeightmap(std::string _fileName);
+    void LoadHeightmap(std::string _fileName, Material* _material);
     
     //
     void Update(float _deltaTime);

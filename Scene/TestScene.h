@@ -12,7 +12,6 @@ class TestScene : public Scene, public InputReceiver
 private:
     Camera* m_FreeCam = nullptr;
     Camera* m_OrbitCam = nullptr;
-    Camera* m_EyeCam = nullptr;
 public:
     TestScene();
     

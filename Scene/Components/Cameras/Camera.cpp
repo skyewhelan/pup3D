@@ -17,15 +17,17 @@ Camera::~Camera()
 
 void Camera::Update(float _deltaTime)
 {
+    TransformComponent::Update(_deltaTime);
+    
     m_Right = glm::normalize(glm::cross(m_Forward, {0.0f, 1.0f, 0.0f}));
     m_Up = glm::cross(m_Right, m_Forward);
     
-    m_View = glm::lookAt(m_Position, m_Position + m_Forward, m_Up);
+    m_View = glm::lookAt(m_WorldPosition, m_WorldPosition + m_Forward, m_Up);
 }
 
-void Camera::SetPosition(glm::vec3 _position)
+void Camera::SetLocalPosition(glm::vec3 _position)
 {
-    m_Position = _position;
+    m_LocalPosition = _position;
 }
 
 void Camera::SetForward(glm::vec3 _forward)
@@ -33,9 +35,9 @@ void Camera::SetForward(glm::vec3 _forward)
     m_Forward = _forward;
 }
 
-glm::vec3 Camera::GetPosition()
+glm::vec3 Camera::GetLocalPosition()
 {
-    return m_Position;
+    return m_LocalPosition;
 }
 
 glm::vec3 Camera::GetForward()
